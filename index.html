@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>실시간 암호화폐 가격</title>
+  <style>
+    body {
+      background-color: #f4f6f8;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 20px;
+    }
+    .tile {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .asset-title {
+      font-weight: bold;
+      font-size: 1.3em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .asset-title img {
+      width: 28px;
+      height: 28px;
+    }
+    .price, .details span {
+      font-weight: bold;
+    }
+    .price {
+      font-size: 1.2em;
+      margin: 10px 0;
+    }
+    .up {
+      color: red;
+    }
+    .down {
+      color: blue;
+    }
+    .neutral {
+      color: #333;
+    }
+    .details {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 8px;
+    }
+    .last-updated {
+      font-weight: normal;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" style="max-width: 100%; overflow-x: auto;">
+  <div id="clock" class="tile" style="grid-column: span 4;">
+        <p class="price" style="font-size: 1.8em;">KST: <span id="kst-time">-</span></p>
+    <p class="price" style="font-size: 1.8em;">UTC: <span id="utc-time">-</span></p>
+  </div>
+  <!-- 각 자산의 코빗, 업비트, 바이낸스 가격을 표시 -->
+  <div id="BTC" class="tile">
+    <div class="asset-title">
+      <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=024" alt="BTC logo"> Bitcoin (BTC)
+    </div>
+        <p class="price"><span id="btc-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="btc-change-krw" class="neutral">-</span>)</p>
+    <p class="price"><span id="btc-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="btc-change-usd" class="neutral">-</span>)</p>
+    <p id="btc-time" class="details last-updated">Last Updated: -</p>
+  </div>
+
+  <div id="ETH" class="tile">
+    <div class="asset-title">
+      <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png?v=024" alt="ETH logo"> Ethereum (ETH)
+    </div>
+        <p class="price"><span id="eth-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="eth-change-krw" class="neutral">-</span>)</p>
+    <p class="price"><span id="eth-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="eth-change-usd" class="neutral">-</span>)</p>
+    <p id="eth-time" class="details last-updated">Last Updated: -</p>
+  </div>
+
+  <div id="XRP" class="tile">
+    <div class="asset-title">
+      <img src="https://cryptologos.cc/logos/xrp-xrp-logo.png?v=024" alt="XRP logo"> XRP (XRP)
+    </div>
+    <p class="price"><span id="xrp-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="xrp-change-krw" class="neutral">-</span>)</p>
+    <p class="price"><span id="xrp-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="xrp-change-usd" class="neutral">-</span>)</p>
+    <p id="xrp-time" class="details last-updated">Last Updated: -</p>
+  </div>
+
+  <div id="SOL" class="tile">
+    <div class="asset-title">
+      <img src="https://cryptologos.cc/logos/solana-sol-logo.png?v=024" alt="SOL logo"> Solana (SOL)
+    </div>
+    <p class="price"><span id="sol-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="sol-change-krw" class="neutral">-</span>)</p>
+    <p class="price"><span id="sol-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="sol-change-usd" class="neutral">-</span>)</p>
+    <p id="sol-time" class="details last-updated">Last Updated: -</p>
+  </div>
+
+  <div id="ATOM" class="tile">
+    <div class="asset-title">
+      <img src="https://cryptologos.cc/logos/cosmos-atom-logo.png?v=024" alt="ATOM logo"> Cosmos (ATOM)
+    </div>
+    <p class="price"><span id="atom-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="atom-change-krw" class="neutral">-</span>)</p>
+    <p class="price"><span id="atom-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="atom-change-usd" class="neutral">-</span>)</p>
+    <p id="atom-time" class="details last-updated">Last Updated: -</p>
+  </div>
+
+  <div id="ZRO" class="tile">
+    <div class="asset-title">
+      <img src="https://cryptologos.cc/logos/0x-zerox-logo.png?v=024" alt="ZRO logo"> Zero (ZRO)
+    </div>
+    <p class="price"><span id="zro-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="zro-change-krw" class="neutral">-</span>)</p>
+    <p class="price"><span id="zro-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="zro-change-usd" class="neutral">-</span>)</p>
+    <p id="zro-time" class="details last-updated">Last Updated: -</p>
+  </div>
+
+  <div id="ARB" class="tile">
+    <div class="asset-title">
+      <img src="https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=024" alt="ARB logo"> Arbitrum (ARB)
+    </div>
+    <p class="price"><span id="arb-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="arb-change-krw" class="neutral">-</span>)</p>
+    <p class="price"><span id="arb-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="arb-change-usd" class="neutral">-</span>)</p>
+    <p id="arb-time" class="details last-updated">Last Updated: -</p>
+  </div>
+
+  <div id="USDT" class="tile">
+    <div class="asset-title">
+      <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=024" alt="USDT logo"> Tether (USDT)
+    </div>
+    <p class="price"><span id="usdt-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="usdt-change-krw" class="neutral">-</span>)</p>
+        <p id="usdt-time" class="details last-updated">Last Updated: -</p>
+  </div>
+</div>
+
+<script>
+  const assets = [
+    { symbol: 'BTC', upbit: 'KRW-BTC', binance: 'BTCUSDT' },
+    { symbol: 'ETH', upbit: 'KRW-ETH', binance: 'ETHUSDT' },
+    { symbol: 'XRP', upbit: 'KRW-XRP', binance: 'XRPUSDT' },
+    { symbol: 'SOL', upbit: 'KRW-SOL', binance: 'SOLUSDT' },
+    { symbol: 'ATOM', upbit: 'KRW-ATOM', binance: 'ATOMUSDT' },
+    { symbol: 'ZRO', upbit: 'KRW-ZRO', binance: 'ZROUSDT' },
+    { symbol: 'ARB', upbit: 'KRW-ARB', binance: 'ARBUSDT' },
+    { symbol: 'USDT', upbit: 'KRW-USDT' }
+  ];
+
+    async function fetchUpbitData() {
+    try {
+      const symbols = assets.map(asset => asset.upbit).join(",");
+      const response = await fetch(`https://api.upbit.com/v1/ticker?markets=${symbols}`);
+      const data = await response.json();
+
+      data.forEach(item => {
+        const symbol = item.market.split("-")[1];
+        const asset = assets.find(asset => asset.symbol === symbol);
+        if (asset) {
+          const priceKRW = item.trade_price.toLocaleString('ko-KR');
+          const changeRate = (item.signed_change_rate * 100).toFixed(2) + '%';
+          const lastUpdated = new Date().toLocaleTimeString('ko-KR');
+
+          const changeRateClass = item.signed_change_rate > 0 ? 'up' : item.signed_change_rate < 0 ? 'down' : 'neutral';
+
+          const upbitElement = document.getElementById(`${asset.symbol.toLowerCase()}-krw-upbit`);
+          if (upbitElement) {
+            upbitElement.textContent = priceKRW;
+          }
+          const changeKrwElement = document.getElementById(`${asset.symbol.toLowerCase()}-change-krw`);
+          if (changeKrwElement) {
+            changeKrwElement.textContent = changeRate;
+          }
+          const timeElement = document.getElementById(`${asset.symbol.toLowerCase()}-time`);
+          if (timeElement) {
+            timeElement.textContent = `Last Updated: ${lastUpdated}`;
+          }
+
+          if (upbitElement) {
+            upbitElement.className = changeRateClass;
+          }
+          if (changeKrwElement) {
+            changeKrwElement.className = changeRateClass;
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Upbit 데이터를 가져오는 중 오류 발생", error);
+    }
+  }
+
+  async function fetchBinanceData(asset) {
+    try {
+      const response = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${asset.binance}`);
+      const data = await response.json();
+      const priceUSD = parseFloat(data.lastPrice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const changeRateUSD = parseFloat(data.priceChangePercent).toFixed(2) + '%';
+
+      const changeRateClassUSD = parseFloat(data.priceChangePercent) > 0 ? 'up' : parseFloat(data.priceChangePercent) < 0 ? 'down' : 'neutral';
+
+      document.getElementById(`${asset.symbol.toLowerCase()}-usd-binance`).textContent = priceUSD;
+      document.getElementById(`${asset.symbol.toLowerCase()}-change-usd`).textContent = changeRateUSD;
+
+      document.getElementById(`${asset.symbol.toLowerCase()}-usd-binance`).className = changeRateClassUSD;
+      document.getElementById(`${asset.symbol.toLowerCase()}-change-usd`).className = changeRateClassUSD;
+    } catch (error) {
+      console.error(`Binance ${asset.symbol} 데이터를 가져오는 중 오류 발생`, error);
+    }
+  }
+
+  function updatePrices() {
+        fetchUpbitData();
+    assets.forEach(asset => {
+      if (asset.symbol !== 'USDT') {
+      fetchBinanceData(asset);
+    }
+    });
+  }
+
+  // 10초마다 가격 및 변동 정보 업데이트
+  setInterval(updatePrices, 10000);
+  setInterval(updateClock, 1000);
+
+  // 페이지 로드 시 즉시 한 번 가격 업데이트
+  updateClock();
+  updatePrices();
+  function updateClock() {
+    const now = new Date();
+    const kst = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Seoul' })); // UTC+9 for KST
+    const utcTime = `${now.getUTCFullYear()}-${(now.getUTCMonth() + 1).toString().padStart(2, '0')}-${now.getUTCDate().toString().padStart(2, '0')} ${now.getUTCHours().toString().padStart(2, '0')}:${now.getUTCMinutes().toString().padStart(2, '0')}:${now.getUTCSeconds().toString().padStart(2, '0')}`;
+    const kstTime = `${kst.getFullYear()}-${(kst.getMonth() + 1).toString().padStart(2, '0')}-${kst.getDate().toString().padStart(2, '0')} ${kst.getHours().toString().padStart(2, '0')}:${kst.getMinutes().toString().padStart(2, '0')}:${kst.getSeconds().toString().padStart(2, '0')}`;
+
+    document.getElementById('utc-time').textContent = utcTime;
+    document.getElementById('kst-time').textContent = kstTime;
+  }
+</script>
+
+</body>
+</html>
