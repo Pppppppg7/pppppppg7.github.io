@@ -67,7 +67,7 @@
 
 <div class="container" style="max-width: 100%; overflow-x: auto;">
   <div id="clock" class="tile" style="grid-column: span 4; height: 40px; display: flex; align-items: center; justify-content: space-between; padding: 5px;">
-    <p class="price" style="font-size: 1.2em;">KST: <span id="kst-time">-</span>, UTC: <span id="utc-time">-</span></p>
+    <p class="price" style="font-size: 1.2em;">KST: <span id="kst-time">-</span></p>
     <span id="last-updated" class="details" style="font-size: 0.8em;">Last Updated: -</span>
   </div>
   <!-- 각 자산의 코빗, 업비트, 바이낸스 가격을 표시 -->
@@ -77,8 +77,7 @@
     </div>
         <p class="price"><span id="btc-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="btc-change-krw" class="neutral">-</span>)</p>
     <p class="price"><span id="btc-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="btc-change-usd" class="neutral">-</span>)</p>
-    <p id="btc-time" class="details last-updated">Last Updated: -</p>
-  </div>
+      </div>
 
   <div id="ETH" class="tile">
     <div class="asset-title">
@@ -86,8 +85,7 @@
     </div>
         <p class="price"><span id="eth-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="eth-change-krw" class="neutral">-</span>)</p>
     <p class="price"><span id="eth-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="eth-change-usd" class="neutral">-</span>)</p>
-    <p id="eth-time" class="details last-updated">Last Updated: -</p>
-  </div>
+      </div>
 
   <div id="XRP" class="tile">
     <div class="asset-title">
@@ -95,8 +93,7 @@
     </div>
     <p class="price"><span id="xrp-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="xrp-change-krw" class="neutral">-</span>)</p>
     <p class="price"><span id="xrp-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="xrp-change-usd" class="neutral">-</span>)</p>
-    <p id="xrp-time" class="details last-updated">Last Updated: -</p>
-  </div>
+      </div>
 
   <div id="SOL" class="tile">
     <div class="asset-title">
@@ -104,8 +101,7 @@
     </div>
     <p class="price"><span id="sol-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="sol-change-krw" class="neutral">-</span>)</p>
     <p class="price"><span id="sol-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="sol-change-usd" class="neutral">-</span>)</p>
-    <p id="sol-time" class="details last-updated">Last Updated: -</p>
-  </div>
+      </div>
 
   <div id="ATOM" class="tile">
     <div class="asset-title">
@@ -113,8 +109,7 @@
     </div>
     <p class="price"><span id="atom-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="atom-change-krw" class="neutral">-</span>)</p>
     <p class="price"><span id="atom-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="atom-change-usd" class="neutral">-</span>)</p>
-    <p id="atom-time" class="details last-updated">Last Updated: -</p>
-  </div>
+      </div>
 
   <div id="ZRO" class="tile">
     <div class="asset-title">
@@ -122,8 +117,7 @@
     </div>
     <p class="price"><span id="zro-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="zro-change-krw" class="neutral">-</span>)</p>
     <p class="price"><span id="zro-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="zro-change-usd" class="neutral">-</span>)</p>
-    <p id="zro-time" class="details last-updated">Last Updated: -</p>
-  </div>
+      </div>
 
   <div id="ARB" class="tile">
     <div class="asset-title">
@@ -131,16 +125,14 @@
     </div>
     <p class="price"><span id="arb-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="arb-change-krw" class="neutral">-</span>)</p>
     <p class="price"><span id="arb-usd-binance" class="neutral" style="font-size: 0.9em;">-</span> USD (<span id="arb-change-usd" class="neutral">-</span>)</p>
-    <p id="arb-time" class="details last-updated">Last Updated: -</p>
-  </div>
+      </div>
 
   <div id="USDT" class="tile">
     <div class="asset-title">
       <img src="https://cryptologos.cc/logos/tether-usdt-logo.png?v=024" alt="USDT logo"> Tether (USDT)
     </div>
     <p class="price"><span id="usdt-krw-upbit" class="neutral" style="font-size: 0.9em;">-</span> KRW (<span id="usdt-change-krw" class="neutral">-</span>)</p>
-        <p id="usdt-time" class="details last-updated">Last Updated: -</p>
-  </div>
+          </div>
 </div>
 
 <script>
