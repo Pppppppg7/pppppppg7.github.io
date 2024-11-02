@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>실시간 암호화폐 가격</title>
+  <style>
+    body {
+      background-color: #f4f6f8;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 10px;
+    }
+    .tile {
+      background-color: #ffffff;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .asset-title {
+      font-weight: bold;
+      font-size: 1em; /* 자산 이름 크기 축소 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    .asset-title img {
+      width: 20px;
+      height: 20px;
+    }
+    .price, .details span {
+      font-weight: bold;
+      font-size: 0.9em; /* 가격 크기 축소 */
+    }
+    .price {
+      margin: 5px 0;
+    }
+    .up {
+      color: red;
+    }
+    .down {
+      color: blue;
+    }
+    .neutral {
+      color: #333;
+    }
+    .details {
+      font-size: 0.7em; /* 상세 정보 크기 축소 */
+      color: #555;
+      margin-top: 4px;
+    }
+    .last-updated {
+      font-weight: normal;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 각 자산의 코빗, 업비트, 바이낸스 가격을 표시 -->
+  <div id="BTC" class="tile">
+    <div class="asset-title">
+      <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=024" alt="BTC logo"> Bitcoin (BTC)
+    </div>
+    <p class="price">코빗: <span id="btc-krw-korbit" class="neutral">-</span> KRW</p>
+    <p class="price">업비트: <span id="btc-krw-upbit" class="neutral">-</span> KRW (<span id="btc-change-krw" class="neutral">-</span>)</p>
+    <p class="price">바이낸스: <span id="btc-usd-binance" class="neutral">-</span> USD (<span id="btc-change-usd" class="neutral">-</span>)</p>
+    <p id="btc-time" class="details last-updated">Last Updated: -</p>
+  </div>
+
+  <!-- 나머지 자산들 (ETH, XRP, SOL, ATOM, LAYERZERO, ARB, USDT) 추가 -->
+</div>
+
+<script>
+  const assets = [
+    { symbol: 'BTC', upbit: 'KRW-BTC', binance: 'BTCUSDT', korbit: 'btc_krw' },
+    { symbol: 'ETH', upbit: 'KRW-ETH', binance: 'ETHUSDT', korbit: 'eth_krw' },
+    { symbol: 'XRP', upbit: 'KRW-XRP', binance: 'XRPUSDT', korbit: 'xrp_krw' },
+    { symbol: 'SOL', upbit: 'KRW-SOL', binance: 'SOLUSDT', korbit: 'sol_krw' },
+    { symbol: 'ATOM', upbit: 'KRW-ATOM', binance: 'ATOMUSDT', korbit: 'atom_krw' },
+    { symbol: 'LAYERZERO', upbit: 'KRW-ZRO', binance: 'ZROUSDT', korbit: 'zro_krw' },
+    { symbol: 'ARB', upbit: 'KRW-ARB', binance: 'ARBUSDT', korbit: 'arb_krw' },
+    { symbol: 'USDT', upbit: 'KRW-USDT', binance: 'USDTUSDT', korbit: 'usdt_krw' }
+  ];
+
+  async function fetchKorbitData() {
+    try {
+      const symbols = assets.map(asset => asset.korbit).join(",");
+      const response = await fetch(`https://api.korbit.co.kr/v2/tickers?symbol=${symbols}`);
+      const data = await response.json();
+
+      assets.forEach(asset => {
+        const korbitData = data[asset.korbit];
+        if (korbitData) {
+          const korbitPrice = parseFloat(korbitData.last).toLocaleString('ko-KR');
+          document.getElementById(`${asset.symbol.toLowerCase()}-krw-korbit`).textContent = korbitPrice;
+        }
+      });
+    } catch (error) {
+      console.error("Korbit 데이터를 가져오는 중 오류 발생", error);
+    }
+  }
+
+  async function fetchUpbitData() {
+    try {
+      const symbols = assets.map(asset => asset.upbit).join(",");
+      const response = await fetch(`https://api.upbit.com/v1/ticker?markets=${symbols}`);
+      const data = await response.json();
+
+      data.forEach(item => {
+        const symbol = item.market.split("-")[1];
+        const asset = assets.find(asset => asset.symbol === symbol);
+        if (asset) {
+          const priceKRW = item.trade_price.toLocaleString('ko-KR');
+          const changeRate = (item.signed_change_rate * 100).toFixed(2) + '%';
+          const lastUpdated = new Date().toLocaleTimeString('ko-KR');
+
+          const changeRateClass = item.signed_change_rate > 0 ? 'up' : item.signed_change_rate < 0 ? 'down' : 'neutral';
+
+          document.getElementById(`${asset.symbol.toLowerCase()}-krw-upbit`).textContent = priceKRW;
+          document.getElementById(`${asset.symbol.toLowerCase()}-change-krw`).textContent = changeRate;
+          document.getElementById(`${asset.symbol.toLowerCase()}-time`).textContent = `Last Updated: ${lastUpdated}`;
+
+          document.getElementById(`${asset.symbol.toLowerCase()}-krw-upbit`).className = changeRateClass;
+          document.getElementById(`${asset.symbol.toLowerCase()}-change-krw`).className = changeRateClass;
+        }
+      });
+    } catch (error) {
+      console.error("Upbit 데이터를 가져오는 중 오류 발생", error);
+    }
+  }
+
+  async function fetchBinanceData(asset) {
+    try {
+      const response = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${asset.binance}`);
+      const data = await response.json();
+      const priceUSD = parseFloat(data.lastPrice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const changeRateUSD = parseFloat(data.priceChangePercent).toFixed(2) + '%';
+
+      const changeRateClassUSD = parseFloat(data.priceChangePercent) > 0 ? 'up' : parseFloat(data.priceChangePercent) < 0 ? 'down' : 'neutral';
+
+      document.getElementById(`${asset.symbol.toLowerCase()}-usd-binance`).textContent = priceUSD;
+      document.getElementById(`${asset.symbol.toLowerCase()}-change-usd`).textContent = changeRateUSD;
+
+      document.getElementById(`${asset.symbol.toLowerCase()}-usd-binance`).className = changeRateClassUSD;
+      document.getElementById(`${asset.symbol.toLowerCase()}-change-usd`).className = changeRateClassUSD;
+    } catch (error) {
+      console.error(`Binance ${asset.symbol} 데이터를 가져오는 중 오류 발생`, error);
+    }
+  }
+
+  function updatePrices() {
+    fetchKorbitData();
+    fetchUpbitData();
+    assets.forEach(asset => {
+      fetchBinanceData(asset);
+    });
+  }
+
+  // 10초마다 가격 및 변동 정보 업데이트
+  setInterval(updatePrices, 10000);
+
+  // 페이지 로드 시 즉시 한 번 가격 업데이트
+  updatePrices();
+</script>
+
+</body>
+</html>
